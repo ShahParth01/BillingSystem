@@ -1,0 +1,489 @@
+﻿#include <iostream>
+#include <string>
+#include<stdlib.h>
+#include<Windows.h>
+
+using namespace std;
+void main_menu();
+void gotoxy(int x, int y);
+class Item {
+	long long int itemID;
+	string name;
+	int str_length;
+public:
+	void add_itemID(int i) {
+		long long int itemID;
+		gotoxy(25, 10);
+		cout << "===============================";
+		gotoxy(25, 11);
+		cout << "\tItem " << i + 1;
+		gotoxy(25, 12);
+		cout << "===============================";
+		gotoxy(25, 14);
+		long long int id = 1000000;
+		cout << "Enter 9 digit ItemID: " << id;
+		cin >> itemID;
+		long long int no = (id * 100) + itemID;
+		this->itemID = no;
+
+	}
+
+	void add_name() {
+		string name;
+		gotoxy(25, 16);
+		cout << "Enter Item Name: ";
+		cin.ignore(100, '\n');
+		getline(cin, name);
+		this->name = name;
+		int length;
+		length = name.length();
+		this->str_length = length;
+
+	}
+
+	long long int get_itemID() {
+		return itemID;
+	}
+
+	string get_name() {
+		return name;
+	}
+
+	int get_strLength() {
+		return str_length;
+	}
+}I[100];
+
+class Amount :public Item {
+	float price;
+	int qty;
+	int tax;
+	int dsct;
+	float sum;
+	float x;
+	float y;
+	float z;
+	float q;
+public:
+
+	void add_price() {
+		float price;
+		gotoxy(25, 18);
+		cout << "Enter Price: ";
+		cin >> price;
+		this->price = price;
+	}
+
+	void add_quantity() {
+		int qty;
+		gotoxy(25, 20);
+		cout << "Enter Quantity: ";
+		cin >> qty;
+		this->qty = qty;
+	}
+
+	void add_tax() {
+		int tax;
+		gotoxy(25, 22);
+		cout << "Enter Tax Percent (%): ";
+		cin >> tax;
+		this->tax = tax;
+	}
+
+	void add_discount() {
+		int dsct;
+		gotoxy(25, 24);
+		cout << "Enter Discount Percent (%): ";
+		cin >> dsct;
+		this->dsct = dsct;
+	}
+
+	float get_price() {
+		return price;
+	}
+
+	int get_qty() {
+		return qty;
+	}
+
+	int get_tax() {
+		return tax;
+	}
+
+	int get_dsct() {
+		return dsct;
+	}
+
+	void calculate() {
+		float sum;
+		x = (get_price() * get_qty());
+		z = (x * get_tax()) / 100;
+		y = (x + z);
+		q = ((y * get_dsct()) / 100);
+		sum = (y - q);
+		this->sum = sum;
+	}
+
+	float get_calculate() {
+		return sum;
+	}
+
+
+}A[100];
+
+class Bill :public Item, public Amount {
+public:
+	int add_item(int i, int cnt) {
+		while (i != (cnt)) {
+			system("cls");
+			I[i].add_itemID(i);
+			I[i].add_name();
+			A[i].add_price();
+			A[i].add_quantity();
+			A[i].add_tax();
+			A[i].add_discount();
+			A[i].calculate();
+			i++;
+		}
+		return i + 1;
+	}
+
+	int edit_item(int i, int cnt) {
+		gotoxy(25, 9);
+		cout << "Enter details to be edited:" << endl;
+		while (i != (cnt)) {
+			I[i].add_itemID(i);
+			I[i].add_name();
+			A[i].add_price();
+			A[i].add_quantity();
+			A[i].add_tax();
+			A[i].add_discount();
+			A[i].calculate();
+			i++;
+		}
+		return i + 1;
+	}
+
+	void billdetails(int a, float sum) {
+		int i;
+		gotoxy(25, 10);
+		cout << "==============================================================================================";
+		gotoxy(25, 11);
+		cout << "                                            BILL DETAILS                                  ";
+		gotoxy(25, 12);
+		cout << "==============================================================================================" << endl;
+
+		cout << "\t\t\tItemID" << "     Name" << "\t\t\tPrice" << "\t\tQuantity" << "\tTax" << "\tDiscount" << "\tNet Amount" << endl;
+		for (i = 0; i < a; i++) {
+			if (I[i].get_strLength() > 4) {
+				cout << "\t\t\t" << I[i].get_itemID() << "  " << I[i].get_name() << "\t\t" << A[i].get_price() << "\t\t" << A[i].get_qty() << "\t\t" << A[i].get_tax() << "\t" << A[i].get_dsct() << "\t\t" << A[i].get_calculate() << endl;
+			}
+			else {
+				cout << "\t\t\t" << I[i].get_itemID() << "  " << I[i].get_name() << "\t\t\t" << A[i].get_price() << "\t\t" << A[i].get_qty() << "\t\t" << A[i].get_tax() << "\t" << A[i].get_dsct() << "\t\t" << A[i].get_calculate() << endl;
+			}
+		}
+		cout << "\t\t\t===========================================================================================" << endl;
+		cout << "\t\t\t                                     GRAND TOTAL= " << sum << endl;
+		cout << "\t\t\t===========================================================================================" << endl;
+	}
+
+	void itemdetails(int i, int cnt) {
+		int j;
+		for (j = 0; j < cnt; j++) {
+			if (I[j].get_itemID() == i) {
+				break;
+			}
+		}
+		cout << endl;
+		gotoxy(25, 10);
+		cout << "======================================";
+		gotoxy(25, 11);
+		cout << "             Item Details             ";
+		gotoxy(25, 12);
+		cout << "======================================" << endl << endl;
+		cout << "\t\t\tItem ID:                        " << I[j].get_itemID() << endl << endl;
+		cout << "\t\t\tName:                           " << I[j].get_name() << endl << endl;
+		cout << "\t\t\tPrice:                          " << A[j].get_price() << endl << endl;
+		cout << "\t\t\tQuantity:                       " << A[j].get_qty() << endl << endl;
+		cout << "\t\t\tTax Percent (%):                " << A[j].get_tax() << endl << endl;
+		cout << "\t\t\tDiscount Percent (%):           " << A[j].get_dsct() << endl << endl;
+		cout << "\t\t\tNet Amount:                     " << A[j].get_calculate() << endl << endl;
+	}
+}b1;
+
+
+int main()
+{
+	main_menu();
+
+}
+void gotoxy(int x, int y)
+{
+	COORD coordinates;
+	coordinates.X = x;
+	coordinates.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinates);
+
+}
+
+void main_menu() {
+	int option;
+	int cnt = 0, cnt1 = 0, cnt3 = 0, ct{}, i = 0;
+	int id, del;
+	int count;
+	float sum{};
+mainmenu:
+	gotoxy(25, 10);
+	cout << "================================================================================";
+	gotoxy(25, 11);
+	cout << "                               BILLING SYSTEM                   ";
+	gotoxy(25, 12);
+	cout << "================================================================================" << endl << endl;
+	cout << "\t\t\t01.Add/Edit/Remove Items." << endl << endl;
+	cout << "\t\t\t02.Show Item details." << endl << endl;
+	cout << "\t\t\t03.Show Bill details." << endl << endl;
+	cout << "\t\t\t04.Exit." << endl << endl;
+	cout << "\t\t\tEnter your option: ";
+	cin >> option;
+	cout << endl << endl;
+	switch (option) {
+	case 1:
+
+		system("cls");
+	submenu:
+		gotoxy(25, 10);
+		cout << "============================================================================";
+		gotoxy(25, 11);
+		cout << "                              BILL EDITOR                                     ";
+		gotoxy(25, 12);
+		cout << "============================================================================" << endl << endl;
+
+		cout << "\t\t\t1.Add items." << endl << endl;
+		cout << "\t\t\t2.Edit items." << endl << endl;
+		cout << "\t\t\t3.Remove items." << endl << endl;
+		cout << "\t\t\t4.Back to main menu." << endl << endl;
+		cout << "\t\t\tSelect your option: ";
+		int option1;
+		cin >> option1;
+		cout << endl << endl;
+		switch (option1) {
+		case 1:
+			system("cls");
+			gotoxy(25, 10);
+			cout << "How many items do you want to enter? (Enter 0 to go back) : ";
+			cin >> cnt;
+			if (cnt == 0) {
+				goto submenu;
+			}
+			else {
+				system("cls");
+				gotoxy(25, 10);
+				b1.add_item(i, cnt);
+				gotoxy(25, 26);
+				cout << "Item added successfully.." << endl;
+			}
+			gotoxy(25, 28);
+			cout << "Do you want to visit main menu again(y/n): ";
+			char ans;
+			cin >> ans;
+			if (ans == 'y' || ans == 'Y') {
+				system("cls");
+				goto mainmenu;
+			}
+			else {
+				exit(0);
+			}
+			break;
+
+		case 2:
+
+
+			system("cls");
+		edit:
+			gotoxy(25, 8);
+			cout << "Enter ItemID to edit(Enter 0 to go back) : ";
+			cin >> id;
+			if (id == 0) {
+				goto submenu;
+			}
+
+			else {
+
+				for (int j = 0; j < cnt; j++) {
+					if (I[j].get_itemID() == id) {
+						system("cls");
+						gotoxy(25, 10);
+						b1.edit_item(j, cnt);
+						ct = 1;
+					}
+
+				}
+				if (ct == 0) {
+
+					cout << "\t\t\tItem not found...Please try again!" << endl;
+					goto edit;
+				}
+				else {
+					cout << "\t\t\tItem edited successfully!" << endl;
+				}
+
+				cout << "\t\t\tDo you want to visit main menu again(y/n): ";
+				char Ans1;
+				cin >> Ans1;
+
+				if (Ans1 == 'y' || Ans1 == 'Y') {
+					system("cls");
+					goto mainmenu;
+				}
+				else {
+					exit(0);
+				}
+			}
+			break;
+
+		case 3:
+			system("cls");
+		rm:
+			gotoxy(25, 10);
+			int n, j;
+			cout << "Enter ItemID to delete(Enter 0 to go back) :";
+			cin >> n;
+			if (n == 0) {
+				goto submenu;
+			}
+			else {
+				for (i = 0; i < cnt; i++) {
+					if (I[i].get_itemID() == n) {
+						break;
+					}
+				}
+				if (i < cnt) {
+					for (j = i; j < cnt; j++) {
+						I[j] = I[j + 1];
+						A[j] = A[j + 1];
+						cnt1 = 1;
+					}
+				}
+				if (cnt1 == 0) {
+					cout << "\t\t\tItemID does not exist...Please try again!" << endl;
+					cnt3 = 1;
+					goto rm;
+				}
+				else if (cnt3 != 0) {
+					system("cls");
+					gotoxy(25, 10);
+					cout << "Item removed successfully!" << endl;
+				}
+
+				cout << "\t\t\tDo you want to visit main menu again(y/n): ";
+				char Ans2;
+				cin >> Ans2;
+
+				if (Ans2 == 'y' || Ans2 == 'Y') {
+					system("cls");
+					goto mainmenu;
+				}
+				else {
+					exit(0);
+				}
+			}
+			break;
+
+		case 4:
+			system("cls");
+			goto mainmenu;
+			break;
+
+		default:
+			cout << "\t\t\tYou have entered wrong input...Please try again!" << endl;
+			goto submenu;
+		}
+
+	case 2:
+		system("cls");
+	details:
+		gotoxy(25, 10);
+		int ID;
+		cout << "Enter Item ID(Enter 0 to go back) : ";
+		cin >> ID;
+		if (ID == 0) {
+			system("cls");
+			goto mainmenu;
+		}
+		else if (cnt == 0) {
+			gotoxy(25, 11);
+			cout << "item doesn't exist...please try again!" << endl;
+			goto details;
+		}
+		else {
+			for (int m = 0; m < cnt; m++) {
+				if (I[m].get_itemID() == ID) {
+					system("cls");
+					b1.itemdetails(ID, cnt);
+				}
+
+				else {
+					gotoxy(25, 12);
+					cout << "Item doesn't exist...Please try again!" << endl;
+					goto details;
+				}
+			}
+
+			cout << "\t\t\tDo you want to visit main menu again(y/n): ";
+			char Ans;
+			cin >> Ans;
+
+			if (Ans == 'y' || Ans == 'Y') {
+				system("cls");
+				goto mainmenu;
+			}
+			else {
+				exit(0);
+			}
+		}
+		break;
+
+	case 3:
+
+		sum = 0;
+		for (int j = 0; j < cnt; j++) {
+			sum = sum + A[j].get_calculate();
+		}
+
+		if (cnt1 != 0) {
+			system("cls");
+			b1.billdetails(cnt - 1, sum);
+		}
+
+		else if (cnt == 0) {
+			cout << "\t\t\tPlease add an item to see the bill." << endl;
+			goto mainmenu;
+		}
+		else {
+			system("cls");
+			b1.billdetails(cnt, sum);
+		}
+
+		cout << "\t\t\tDo you want to visit main menu again(y/n): ";
+		char AnS;
+		cin >> AnS;
+
+		if (AnS == 'y' || AnS == 'Y') {
+			system("cls");
+			goto mainmenu;
+		}
+		else {
+			exit(0);
+		}
+		break;
+
+	case 4:
+		exit(0);
+		break;
+
+	default:
+		cout << "\t\t\tYou have entered wrong option...Please try again!" << endl;
+		goto mainmenu;
+	}
+}
+
